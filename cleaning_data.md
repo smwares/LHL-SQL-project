@@ -1,4 +1,4 @@
-What issues will you address by cleaning the data?
+## What issues will you address by cleaning the data?
 
 By cleaning the data, the issues of faulty results and bad records can hopefully be addressed. Bad data can be caused by missing values where filling in data by cross referencing tables is possible, deleting records that are not possible (such as a negative amount of products), duplicates and performing calculations on data that needs to be re-evaluated (such as the monetary fields that were multiplied by a factor of one million during the recording process).
 
@@ -7,7 +7,7 @@ Next would be to convert data types where applicable (such as the time column in
 The next step would be to process data so that the values are accurate (such as dividing the monetary values by 1 million as it was possibly multiplied by 1 million by mistake at the beginning)
 Afterwards, fill in missing data where possible by cross referencing tables and reviewing the context of the missing data (such as the currency code by looking at prices of similar products in other records that may have currency codes).
 
-Queries:
+## Queries:
 Below, provide the SQL queries you used to clean your data.
 
 ```sql
