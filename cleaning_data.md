@@ -10,6 +10,7 @@ Afterwards, fill in missing data where possible by cross referencing tables and 
 Queries:
 Below, provide the SQL queries you used to clean your data.
 
+```sql
 -- Rename each table prior to creating backups
 ALTER TABLE all_sessions
 RENAME TO all_sessions_backup;
@@ -25,6 +26,7 @@ RENAME TO sales_by_sku_backup;
 
 ALTER TABLE sales_report
 RENAME TO sales_report_backup;
+
 
 -- For all_sessions table, recreate table with inserted serialized primary key
 CREATE TABLE IF NOT EXISTS all_sessions (
@@ -72,6 +74,7 @@ INSERT INTO all_sessions (
 	SELECT *
 	FROM all_sessions_backup;
 
+
 -- Same approach for analytics table
 CREATE TABLE IF NOT EXISTS analytics (
 	analytics_id SERIAL PRIMARY KEY,
@@ -109,6 +112,7 @@ TABLE sales_by_sku_backup;
 CREATE TABLE sales_report AS
 TABLE sales_report_backup;
 
+
 -- Remove redundant spacing from varchar fields at the beginning and end
 UPDATE all_sessions
 SET channel_grouping = BTRIM(channel_grouping),
@@ -139,7 +143,8 @@ SET product_sku = BTRIM(product_sku);
 UPDATE sales_report
 SET product_sku = BTRIM(product_sku),
 	product_name = BTRIM(product_name);
-	
+
+
 -- Drop columns that are completely null
 ALTER TABLE all_sessions
 DROP COLUMN IF EXISTS product_refund_amount,
@@ -150,6 +155,7 @@ DROP COLUMN IF EXISTS search_keyword;
 ALTER TABLE analytics
 DROP COLUMN IF EXISTS user_id;
 
+
 -- Revise SKU and product SKU columns in products, sales by SKU and sales report tables to become primary keys
 ALTER TABLE products
 ADD CONSTRAINT sku PRIMARY KEY(sku);
@@ -157,17 +163,20 @@ ADD CONSTRAINT sku PRIMARY KEY(sku);
 ALTER TABLE sales_by_sku
 ADD CONSTRAINT product_sku PRIMARY KEY(product_sku);
 
+
 -- Rename column product_sku to something else since it must be unique in the table, otherwise constraint fails
 ALTER TABLE sales_report
 RENAME COLUMN product_sku TO prod_sku
 ALTER TABLE sales_report
 ADD CONSTRAINT prod_sku PRIMARY KEY(prod_sku);
 
+
 -- Set the foreign key in the sales_report table
 ALTER TABLE sales_report
 	ADD CONSTRAINT fk_sku
 	FOREIGN KEY (prod_sku)
 	REFERENCES products(sku);
+
 
 -- Add missing SKUs into the products table prior to changing product sku to a foreign key in the sales_by_sku table
 INSERT INTO products (sku, product_name, ordered_quantity, stock_level,
@@ -177,11 +186,13 @@ INSERT INTO products (sku, product_name, ordered_quantity, stock_level,
 	FROM sales_by_sku
 	WHERE product_sku NOT IN (SELECT DISTINCT(sku) FROM products);
 
+
 -- Set the foreign key in the sales_by_sku table
 ALTER TABLE sales_by_sku
 	ADD CONSTRAINT fk_sku
 	FOREIGN KEY (product_sku)
 	REFERENCES products(sku);
+
 
 -- Add missing SKUs into the products table prior to changing product sku to a foreign key in the all_sessions table
 -- Build CTEs that contain unique SKUs in the all_sessions table and the most up-to-date product name and the total quantity first
@@ -203,26 +214,31 @@ INSERT INTO products (sku, product_name, ordered_quantity, stock_level,
 	FROM sku_date_quantity
 	WHERE product_sku NOT IN (SELECT DISTINCT(sku) FROM products);
 
+
 -- Set the foreign key in the all_sessions table
 ALTER TABLE all_sessions
 	ADD CONSTRAINT fk_sku
 	FOREIGN KEY (product_sku)
 	REFERENCES products(sku);
 
+
 -- Revise the date_info column of all_sessions table to date type
 ALTER TABLE all_sessions
 ALTER COLUMN date_info TYPE date
 USING to_date(date_info::varchar, 'YYYYMMDD')
 
+
 -- Revise the date_info column of all_sessions table to date type
 ALTER TABLE analytics
 ALTER COLUMN date_info TYPE date
 USING to_date(date_info::varchar, 'YYYYMMDD')
 
+
 -- Revise visit_start_time column of analytics table to date-time
 ALTER TABLE analytics
 ALTER COLUMN visit_start_time TYPE timestamp
 USING to_timestamp(visit_start_time)
+
 
 -- Update all monetary column fields in all_sessions table to have the values divided by a million
 UPDATE all_sessions
@@ -231,18 +247,22 @@ SET total_transaction_revenue = total_transaction_revenue/1000000,
     product_revenue = product_revenue/1000000,
 	transaction_revenue = transaction_revenue/1000000;
 
+
 -- Update all monetary column fields in analytics table to have the values divided by a million
 UPDATE analytics
 SET revenue = revenue/1000000,
 	unit_price = unit_price/1000000;
+
 
 -- Modify 'not available in demo' text to '(not available)' in all_sessions's city column
 UPDATE all_sessions
 SET city = '(not available)'
 WHERE city = 'not available in demo dataset';
 
+
 -- Delete row where units sold is less than 0
 DELETE FROM analytics WHERE units_sold < 0;
+
 
 -- Delete records from all_sessions table where country and city combinations do not exist
 DELETE FROM all_sessions
@@ -254,19 +274,23 @@ WHERE (country = 'United States' AND city IN ('Bangkok', 'Hong Kong', 'London', 
 	OR (country = 'Canada' AND city IN ('New York'))
 	OR (country = 'France' AND city IN ('San Francisco', 'Singapore'))
 
+
 -- Add 'USD' to all fields under the currency code column in the all_sessions table
 UPDATE all_sessions
 SET currency_code = 'USD'
 WHERE currency_code IS NULL;
+
 
 -- Remove redundant spacing from product name in all sessions table
 -- Revised code from the following source: https://www.postgresqltutorial.com/postgresql-string-functions/regexp_replace/
 UPDATE all_sessions
 SET v2_product_name = REGEXP_REPLACE(v2_product_name,'( ){2,}',' ');
 
+
 -- Remove the backslash at the end and 'Home/' at the beginning from the category fields in the all_sessions table
 UPDATE all_sessions
 SET v2_product_category = BTRIM(LTRIM(RTRIM(v2_product_category, '/'), 'Home/'));
+
 
 -- Reduce the amount of categories in the all_sessions table as many products are unnecessarily in multiple categories
 -- First query creates a CTE to get a table with the counts of categories per product
@@ -287,6 +311,7 @@ SET v2_product_category = ranked_categories.v2_product_category
 FROM ranked_categories
 WHERE all_sessions.v2_product_name = ranked_categories.v2_product_name
 	AND ranked_categories.row_rank = 1;
+
 
 -- Manually revise products whose categories are '(not set)' in the all_sessions table
 UPDATE all_sessions
@@ -320,3 +345,4 @@ WHERE LOWER(v2_product_name) SIMILAR TO '%google women%%baseball raglan%'
 UPDATE all_sessions
 SET v2_product_category = 'Accessories/Sports & Fitness'
 WHERE LOWER(v2_product_name) SIMILAR TO '%yoga mat%';
+```
