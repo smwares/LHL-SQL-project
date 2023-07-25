@@ -1,0 +1,19 @@
+- combining full_visitor_id and visit_id does not create enough unique combinations to be used as a primary key
+	*TO DO: create unique integer column (session_id) and numerically increment for use as primary key
+- one entry in units_sold is negative, -89
+	*TO DO: Investigate entire row containing this entry to see if it's supposed to be 89 or 0
+- the max value of time_on_site (11316) likely means the value is in seconds, as any other larger unit of time would mean the website was open for days at minimum
+- all web pages that have bounces only bounce once
+- units_sold, pageviews, time_on_site, bounces, revenue have null entries which can be replaced with 0
+- there are more unique visit ids than there are unique full visitor ids
+- there are no entries in units_sold or revenue that are 0 (nulls exist however)
+- had to cast date_info back to varchar type to use to_date function
+	*TO DO: convert date_info to date type
+- checking min and max values indicates analytics contains data from 2017-05-01 to 2017-08-01
+- user_id is completely null, so the column can be dropped from the table entirely
+- every single social engagement type is labeled "not socially engaged"
+- almost all visit_ids are the same as the visit_start_times except for 985 unique ids, which have 982 unique visit start times
+- all revenue entries seem valid as they are higher than the cost times the quantity sold
+- there are no revenue entries where no units have been sold (i.e. 0 sold or null)
+- there are no revenue entries recorded (i.e. null) for many entries where there are prices greater than 0 and where units have been sold
+- there are over 45k columns where the date in the visit start time column is a day later than the date column (latest is just before 3AM), possibly due to the date column not being updated as frequently

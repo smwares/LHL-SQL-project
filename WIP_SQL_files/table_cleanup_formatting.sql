@@ -1,15 +1,3 @@
-What issues will you address by cleaning the data?
-
-By cleaning the data, the issues of faulty results and bad records can hopefully be addressed. Bad data can be caused by missing values where filling in data by cross referencing tables is possible, deleting records that are not possible (such as a negative amount of products), duplicates and performing calculations on data that needs to be re-evaluated (such as the monetary fields that were multiplied by a factor of one million during the recording process).
-
-First issue to address is the amount of erroneous data. This involves looking at reccords that have data that does not correspond to their respective fields and also data that when taken into full context does not make sense (such as records that hold city and country combinations that do not exist and records that have negative entries when nothing less than 0 is possible). For the purpose of this project, all erroneous records have been deleted from the tables.
-Next would be to convert data types where applicable (such as the time column in a table that was put in epoch format).
-The next step would be to process data so that the values are accurate (such as dividing the monetary values by 1 million as it was possibly multiplied by 1 million by mistake at the beginning)
-Afterwards, fill in missing data where possible by cross referencing tables and reviewing the context of the missing data (such as the currency code by looking at prices of similar products in other records that may have currency codes).
-
-Queries:
-Below, provide the SQL queries you used to clean your data.
-
 -- Rename each table prior to creating backups
 ALTER TABLE all_sessions
 RENAME TO all_sessions_backup;

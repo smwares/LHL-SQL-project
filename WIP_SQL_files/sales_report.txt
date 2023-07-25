@@ -1,0 +1,12 @@
+- sentiment score has negative values
+- sentiment score ranges from -0.6 to 0.9, meaning the range could be from -1 to +1
+- sentiment magnitude ranges from 0.1 to 2.0, meaning the range could be from 0 to 2
+- product SKU has the same trend as the sales_by_sku table, i.e. numerical ones have no orders or any in stock
+- Several product names have a space in the front of the text field
+	*TO DO: to clean up by stripping the spaces at the beginning and end
+- All products with numerical SKUs have an updated alphanumerical SKU except for the following:
+	- Women's Short Sleeve Hero Tee Sky Blue 9184720
+	- Women's Softshell Jacket Black/Grey 9182778
+	- Women's Yoga Jacket Black 9182502
+- product SKU can be primary key as no entries are null and they're all unique
+- running a correletaion query shows that the ratio column is the total ordered divided by stock level

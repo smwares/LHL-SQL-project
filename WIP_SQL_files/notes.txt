@@ -1,0 +1,187 @@
+General:
+
+- snake case all table and column names in order to avoid issues
+- set ALL fields as varchar at first
+- ensure column names are not reserved keywords (best way to do this is to manually type column names into pgadmin to let the application highlight words that may be reserved)
+- drop tables and recreate tables with renamed column names to avoid SQL keyword issues
+- run COUNT query on database to ensure each table has the right number of columns
+- run COUNT query on each table to ensure the right amount of rows are present
+- run queries on each column to determine data type
+- for integers and floating point numbers, run queries to determine what data type to use and to determine how many digits are required before and after the decimal point
+- run queries to determine if any columns are null, then make judgment call on what type to convert to by looking at the column name
+- determine which columns have completely unique values, and using this info combined with the column name, determine if the column is supposed to be unique
+- check if a column has null values, and if not, combine with the column name to determine if column should be non-nullable
+- determine which columns are primary keys and foreign keys based on previous info
+- create primary keys for tables that do not have a unique column relevant to the table names
+
+Data types:
+	- all_sessions:
+		- full_visitor_id (converted,):
+			- numeric with 24 digits to left of decimal place (max value is beyond what bigint is capable of), non-nullable (?), non-unique (maybe should be unique because it's linked to a visitor's id)
+		- channel_grouping:
+			- varchar, non-nullable (?), non-unique
+		- time_info (converted,):
+			- bigint, non-nullable (?), non-unique (data is unique in table but could be non-unique)
+		- country:
+			- varchar, non-nullable (?), non-unique
+		- city:
+			- varchar, non-nullable (?), non-unique
+		- total_transaction_revenue (converted,):
+			- bigint (should be float with 2 decimal places), nullable, non-unique
+		- transactions (converted,):
+			- bigint, nullable, non-unique
+		- time_on_site (converted,):
+			- bigint, nullable, non-unique
+		- pageviews (converted,):
+			- bigint, non-nullable (?), non-unique
+		- session_quality_dim (converted,):
+			- bigint, nullable, non-unique
+		- date_info (converted,):
+			- bigint, non-nullable (?), non-unique
+		- visit_id (converted,):
+			- bigint, non-nullable (?), non-unique (should this be unique since it's an id?)
+		- type_info:
+			- varchar, non-nullable, non-unique
+		- product_refund_amount (converted,):
+			- null (should likely be float with 2 decimal places), nullable, non-unique
+		- product_quantity (converted,):
+			- bigint, nullable, non-unique
+		- product_price (converted,):
+			- bigint (should be float with 2 decimal places), non-nullable (?), non-unique
+		- product_revenue (converted,):
+			- bigint (should be float with 2 decimal places), nullable, non-unique
+		- product_sku:
+			- varchar, non-nullable (?), non-unique
+		- v2_product_name:
+			- varchar, non-nullable (?), non-unique
+		- v2_product_category:
+			- varchar, non-nullable (?), non-unique
+		- product_variant:
+			- varchar, non-nullable (?), non-unique
+		- currency_code:
+			- varchar, nullable (should not be due to it being currency code), non-unique (only has USD as currency and nothing else)
+		- item_quantity (converted,):
+			- null (should likely be bigint), nullable, non-unique
+		- item_revenue (converted,):
+			- null (should likely be float with 2 decimal places), nullable, non-unique
+		- transaction_revenue (converted,):
+			- bigint (should be float with 2 decimal places), nullable, non-unique
+		- transaction_id (converted,):
+			- varchar, nullable, non-unique
+		- page_title:
+			- varchar, nullable (should not be but there's 1 null entry), non-unique
+		- search_keyword:
+			- null (should be varchar), nullable, non-unique
+		- page_path_level_1:
+			- varchar, non-nullable (?), non-unique
+		- ecommerce_action_type (converted,):
+			- bigint, non-nullable (?), non-unique
+		- ecommerce_action_step (converted,):
+			- bigint, non-nullable (?), non-unique
+		- ecommerce_action_option:
+			- varchar, nullable, non-unique
+
+	- analytics:
+		- visit_number (converted,):
+			- bigint, non-nullable (?), non-unique
+		- visit_id (converted,):
+			- bigint, non-nullable (?), non-unique
+		- visit_start_time (converted,):
+			- bigint, non-nullable (?), non-unique
+		- date_info (converted,):
+			- bigint, non-nullable (?), non-unique
+		- full_visitor_id (converted,):
+			- numeric with 24 digits to left of decimal place (max value is beyond what bigint is capable of), non-nullable (?), non-unique
+		- user_id:
+			- null (should likely be varchar since it's an id field that could be alphaneumeric), nullable, non-unique
+		- channel_grouping:
+			- varchar, non-nullable (?), non-unique
+		- social_engagement_type:
+			- varchar, non-nullable (?), non-unique (only 1 value in this table so far)
+		- units_sold (converted,):
+			- bigint, nullable (could be non-nullable with 0 replacing null value), non-unique
+		- pageviews (converted,):
+			- integer, nullable (?), non-unique
+		- time_on_site (converted,):
+			- bigint, nullable (?), non-unique
+		- bounces (converted,):
+			- bigint, nullable (?), non-unique (only one current entry of 1)
+		- revenue (converted,):
+			- bigint (should be float with 2 decimal places), nullable (?), non-unique
+		- unit_price (converted,):
+			- bigint (should be float with 2 decimal places), non-nullable (?), non-unique
+
+	- products:
+		- sku:
+			- varchar, non-nullable, unique
+		- product_name:
+			- varchar, non-nullable, non-unique
+		- ordered_quantity (converted,):
+			- bigint, non-nullable (?), non-unique
+		- stock_level (converted,):
+			- bigint, non-nullable (?), non-unique
+		- restocking_lead_time (converted,):
+			- bigint, non-nullable (?), non-unique
+		- sentiment_score (converted,):
+			- float with 1 decimal place (2 left, 1 right), nullable (only 1 entry is null), non-unique
+		- sentiment_magnitude (converted,):
+			- float with 1 decimal place (1 left, 1 right), nullable (only 1 entry is null), non-unique
+
+	- sales_by_sku:
+		- product_sku:
+			- varchar, non-nullable, unique
+		- total_ordered (converted,):
+			- bigint, non-nullable (?), non-unique
+
+	- sales_report:
+		- product_sku:
+			- varchar, non-nullable, unique
+		- total_ordered:
+			- integer, non-nullable (?), non-unique
+		- product_name:
+			- varchar, non-nullable (?), non-unique
+		- stock_level:
+			- bigint, non-nullable (?), non-unique
+		- restocking_lead_time:
+			- bigint, non-nullable (?), non-unique
+		- sentiment_score:
+			- float with 1 decimal place (2 left, 1 right), non-nullable (?), non-unique
+		- sentiment_magnitude:
+			- float with 1 decimal place (1 left, 1 right), non-nullable (?), non-unique
+		- ratio:
+			- float with 20 decimal places (1 left, 20 right), nullable (?), non-unique
+
+Issues so far:
+- noticed names being highlighted when typing column names to indicate keywords, had to change names to avoid conflict
+- had to change CSV file permissions to add "Everyone" as a user for reading access, otherwise the manual import process (i.e. VIA SQL queries) fails with a "permission denied error"
+
+Interesting observations:
+-Not verified through extensive testing, but it seems that the processing time of importing by using manual SQL queries is faster than using the pgadmin4 UI (over 2x faster when importing the analytics table (15.18s VS 7.094s))
+
+- File size comparisons:
+	- all_sessions:
+		- csv - 3914kB
+		- pgsql (all varchar, no cleaning): 4440kB
+		- pgsql (type formatted, no cleaning): 4696kB
+		- pgsql (formatted, cleaned): -kB
+	- analytics:
+		- csv - 427MB
+		- pgsql (all varchar, no cleaning): 580MB
+		- pgsql (type formatted, no cleaning): 596MB
+		- pgsql (formatted, cleaned): -MB
+	- products:
+		- csv - 67kB
+		- pgsql (all varchar, no cleaning): 144kB
+		- pgsql (type formatted, no cleaning): 136kB
+		- pgsql (formatted, cleaned): -kB
+	- sales_by_sku:
+		- csv - 8kB
+		- pgsql (all varchar, no cleaning): 56kB
+		- pgsql (type formatted, no cleaning): 32kB
+		- pgsql (formatted, cleaned): -kB
+	- sales_report:
+		- csv - 33kB
+		- pgsql (all varchar, no cleaning): 80kB
+		- pgsql (type formatted, no cleaning): 64kB
+		- pgsql (formatted, cleaned): -kB
+

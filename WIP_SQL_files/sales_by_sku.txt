@@ -1,0 +1,11 @@
+- SKUs that are strictly numerical have no orders
+- product SKU can be primary key as no entries are null and they're all unique
+- 8 SKUs in sales_by_sku table that aren't in any of the tables that have SKU data, 2 of which have been ordered in the past:
+	- 9180753
+	- 9182182
+	- 9182763
+	- 9182779
+	- 9184663
+	- 9184677
+	- GGOEGALJ057912 - 2 orders
+	- GGOEYAXR066128 - 3 orders

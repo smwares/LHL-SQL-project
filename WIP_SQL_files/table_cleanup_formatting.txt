@@ -1,0 +1,30 @@
+- Make back-ups of all tables
+- Create copies from backups to start formatting and clean-up
+- Add unique numerically incremented columns for all_sessions and analytics tables as a primary key (bigint)
+- Use BTRIM on all varchar fields to trim white spaces before and after each entry
+- Drop all columns that are entirely null
+- add skus from all tables with sku columns to products, then add foreign key constraints to those tables
+- format all date columns to date format
+- format time epoch column to date-time format
+- divide all money-related fields by 1,000,000 (cast to numeric(20,2))
+- remove '/' at the end of text in all category fields in all_sessions
+- modify 'not available in demo' text to '(not available)' in all_sessions
+- delete row in analytics table where units sold is -89
+- delete rows where country and city combinations do not make sense
+- add USD to all currency code columns
+
+- 14 categories still '(not set)', revise to the following:
+	- "Gift Card - $25.00" - Gift Cards
+	- "Google Four Color EDC Flashlight" - Electronics
+	- "Google Leather Journal" - Office/Notebooks & Journals
+	- "Google Men's Zip Hoodie" - Apparel/Men's/Men's-Outerwear
+	- "Google Women's 1/4 Zip Jacket Charcoal" - Apparel/Women's/Women's-Outerwear
+	- "Google Women's 3/4 Sleeve Baseball Raglan Heather/Black" - Apparel/Women's/Women's-T-Shirts
+	- "Google Women's Performance Full Zip Jacket Black" - Apparel/Women's/Women's-Outerwear
+	- "Google Women's Performance Hero Tee Gunmetal" - Apparel/Women's/Women's-T-Shirts
+	- "Google Women's Short Sleeve Hero Tee Sky Blue" - Apparel/Women's/Women's-T-Shirts
+	- "Google Women's Softshell Jacket Black/Grey" - Apparel/Women's/Women's-Outerwear
+	- "Google Women's Zip Hoodie Grey" - Apparel/Women's/Women's-Outerwear
+	- "Waze Women's Short Sleeve Tee" - Apparel/Women's/Women's-T-Shirts
+	- "Waze Women's Typography Short Sleeve Tee" - Apparel/Women's/Women's-T-Shirts
+	- "Yoga Mat Purple" - Accessories/Sports & Fitness

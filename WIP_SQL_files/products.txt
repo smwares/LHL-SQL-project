@@ -1,0 +1,14 @@
+- sentiment score has negative values
+- sentiment score ranges from -0.6 to 1.0, meaning the range could be from -1 to +1
+- sentiment magnitude ranges from 0.1 to 2.0, meaning the range could be from 0 to 2
+- product SKU has the same trend as the sales_report and sales_by_sku tables, i.e. numerical ones have no orders or any in stock
+- 527 SKUs in products that aren't in any of the other tables
+- 638 SKUs in products that are not in sales_by_sku or sales_report
+- product table has all the SKUs that are in the sales report table
+- There are 147 SKUs in the all_sessions table that are not present in the products table, and 673 SKUs in the products table that are not present in the all_sessions table
+- Several product names have a space in the front of the text field
+	*TO DO: to clean up by stripping the spaces at the beginning and end
+- All products with numerical SKUs have an updated alphanumerical SKU, including the 3 products in the sales_report table that didn't have an updated SKU
+- SKU can be primary key as no entries are null and they're all unique
+- product names are consistent across the products table and the sales report table
+- there are 335 entries in the all sessions table where the names do not match the ones in the products table for the same product SKU

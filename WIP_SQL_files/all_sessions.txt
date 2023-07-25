@@ -1,0 +1,38 @@
+- combining full_visitor_id and visit_id does not create enough unique combinations to be used as a primary key
+	*TO DO: create unique integer column (session_id) and numerically increment for use as primary key
+- product_refund_amount, item_quantity, item_revenue and search_keyword are completely null (can probably be deleted)
+- no numeric columns have negative numbers
+- channel grouping has one less category compared to the analytics table, as 'social' grouping is present in the analytics table only
+- transactions column seems to be either null or contain 1, and they don't seem to ccorrespond to actual transactions that were made (i.e. possibly bad data)
+- date field indicates that the data spans from 2016-08-01 to 2017-08-01 (i.e. 1 year's worth of data)
+- only 9 transactions with transaction ids
+- ecommerce action type has 7 values ranging from 0 to 6, likely are internal codes
+- ecommerce action step has 3 values ranging from 1 to 3
+- ecommmerce action types 0-4 and 6 has action step of 1 and nothing for option, type 5 has action step 1 and option of 'billing and shipping,' action step 2 and option of 'payment' and action step 3 and option of 'review'
+- several cities are either '(not set)' or are 'not available in demo dataset'
+	*TO DO: revise 'not available in demo dataset' to '(not available)' so that it appears at the top of an ordered list
+- The following city and country pairs in the table do not exist in the real world:
+	- Bangkok, United States
+	- Dublin, Netherlands
+	- Hong Kong, United States
+	- Istanbul, Hungary
+	- London, United States
+	- Los Angeles, Australia
+	- Mexico City, United States
+	- Mountain View, Japan
+	- New York, Canada
+	- San Francisco, France
+	- San Francisco, Japan
+	- Singapore, France
+	- Yokohama, United States
+- there are more unique visitor ids than full visitor ids (14556 VS 14223), which means that a full visitor id can have more than one visitor id
+- product SKUs that are numerical only have no prices attributed to them
+- product category has two lifestyle entries (lifestyle and lifestyle/)
+	*TO DO: remove backslash from the end of every entry, keep only last page of category label as the the end part is the most specific sub-category
+- currency code is either null or USD
+- based on comparison of average price of products that have a currency code vs those that do not, it is safe to turn currency code to USD (or outright delete the column)
+- total transaction revenue column contains the total revenue and none of the other revenue columns have entries where total transaction revenue is null, meaning that the total_transaction_revenue column should be used for revenue calculations
+- for entries that exist for transaction revenue, the number in the same row for the total transaction revenue is the same (meaning the transaction revenue column is redundant and can be removed)
+- 10 rows where transaction revenue is less than product price
+- 146 product SKUs that aren't in any of the other tables that contain SKU data
+- converting the time column to datetime reveals that the range is only from 1969 to 1970, meaning it's not in epoch format
